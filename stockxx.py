@@ -19,7 +19,7 @@ bynd_df = pd.read_csv("Datasets/BYND.csv")
 bynd_df["Date"] = pd.to_datetime(bynd_df.Date, format="%Y-%m-%d")
 bynd_df.index = bynd_df['Date']
 data = bynd_df.sort_index(ascending=True,axis=0)
-new_data = pd.DataFrame(index=range(0,len(bynd_df)), columns=['Date','Close'])
+new_data = pd.DataFrame(index=range(0,len(bynd_df)), columns=['Date',' Close'])
 
 for i in range(0,len(data)):
     new_data["Date"][i]=data['Date'][i]
@@ -105,9 +105,9 @@ app.layout = html.Div([
                 )
             ])
         ]),
-        dcc.Tab(label ='Vanguard Canadian REIT ETF (VNFTF)', children =[
+        dcc.Tab(label ='Multiple Stocks Data', children =[
             html.Div([
-                html.H1("Vanguard REIT ETF High Vs. Lows (VNFTF)", style ={'textAlign': 'center'}),
+                html.H1("High Vs. Lows (VNFTF)", style ={'textAlign': 'center'}),
                 dcc.Dropdown(id ='my-dropdown',
                              options =[{'label': 'Vanguard REIT ETF', 'value': 'VNFTF'},
                                       {'label': 'Tesla','value': 'TSLA'}, 
@@ -116,7 +116,7 @@ app.layout = html.Div([
                              style ={"display": "block", "margin-left": "auto", 
                                     "margin-right": "auto", "width": "60%"}),
                 dcc.Graph(id ='highlow'),
-                html.H1("Facebook Market Volume", style ={'textAlign': 'center'}),
+                html.H1("Market Volume", style ={'textAlign': 'center'}),
          
                 dcc.Dropdown(id='my-dropdown2',
                              options =[{'label': 'Vanguard REIT ETF', 'value': 'VNFTF'},
@@ -171,6 +171,7 @@ def update_graph(selected_dropdown):
     return figure
 @app.callback(Output('volume', 'figure'),
               [Input('my-dropdown2', 'value')])
+
 
 def update_graph(selected_dropdown_value):
     dropdown = {"VNFTF": "Vanguard REIT ETF", "TSLA": "Tesla", "ROKU": "Roku"}
