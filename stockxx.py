@@ -5,14 +5,26 @@ import dash_core_components as dcc
 import dash_html_components as html
 import pandas as pd
 import plotly.graph_objs as go
+import plotly.express as px
 from dash.dependencies import Input, Output
 from keras.models import load_model
 from sklearn.preprocessing import MinMaxScaler
 import numpy as np
 
+
+# Style
+# external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
+
+
 # App setup
 
-app = dash.Dash()
+app = dash.Dash(__name__)
+
+colors = {
+    'background': '#111111',
+    'text': '#7FDBFF'
+}
+
 server = app.server
 scaler = MinMaxScaler(feature_range=(0,1))
 bynd_df = pd.read_csv("Datasets/BYND.csv")
@@ -62,7 +74,7 @@ valid['Predictions'] = closing_price
 shorted = pd.read_csv("Datasets/multiplestock.csv")
 
 app.layout = html.Div([
-    html.H1("Price Action Analysis", style={"textAlign": "center"}),
+    html.H1("Price Action Analysis", style={"textAlign": "center", 'fontcolor': 'blue'}),
     dcc.Tabs(id="tabs", children=[
         dcc.Tab(label = 'Beyond Meat (BYND) Stock', children = [
             html.Div([
@@ -74,11 +86,11 @@ app.layout = html.Div([
                             go.Scatter(
                                 x =train.index,
                                 y =valid[" Close"],
-                                mode ='markers'
+                                mode ='lines+markers'
                             )
                         ],
                         "layout": go.Layout(
-                            title ='scatter plot',
+                            title ='Scatter Plot',
                             xaxis ={"title": 'Date'},
                             yaxis ={'title': 'Closing Rate'}
 
@@ -93,11 +105,11 @@ app.layout = html.Div([
                             go.Scatter(
                                 x =valid.index,
                                 y =valid["Predictions"],
-                                mode ='markers'
+                                mode ='lines+markers'
                             )
                         ],
                         "layout": go.Layout(
-                            title ='scatter plot',
+                            title ='Scatter Plot',
                             xaxis ={"title": 'Date'},
                             yaxis ={'title': 'Closing Rate'}
                         )
@@ -115,17 +127,43 @@ app.layout = html.Div([
                              multi =True, value =['VNFTF'],
                              style ={"display": "block", "margin-left": "auto", 
                                     "margin-right": "auto", "width": "60%"}),
-                dcc.Graph(id ='highlow'),
+                dcc.Graph(id ='highlow', figure ={
+                        "data":[
+                            go.Scatter(
+                                x =valid.index,
+                                y =valid["Predictions"],
+                                mode ='lines+markers'
+                            )
+                        ],
+                        "layout": go.Layout(
+                            title ='Scatter Plot',
+                            xaxis ={"title": 'Date'},
+                            yaxis ={'title': 'Closing Rate'}
+                        )
+                    }), 
                 html.H1("Market Volume", style ={'textAlign': 'center'}),
          
-                dcc.Dropdown(id='my-dropdown2',
+                dcc.Dropdown(id='my-dropdown2',  
                              options =[{'label': 'Vanguard REIT ETF', 'value': 'VNFTF'},
                                       {'label': 'Tesla','value': 'TSLA'}, 
                                       {'label': 'Roku', 'value': 'ROKU'}], 
                              multi =True, value =['VNFTF'],
                              style ={"display": "block", "margin-left": "auto", 
                                     "margin-right": "auto", "width": "60%"}),
-                dcc.Graph(id ='volume')
+                dcc.Graph(id ='volume', figure ={
+                        "data":[
+                            go.Scatter(
+                                x =valid.index,
+                                y =valid["Predictions"],
+                                mode ='lines+markers'
+                            )
+                        ],
+                        "layout": go.Layout(
+                            title ='Scatter Plot',
+                            xaxis ={"title": 'Date'},
+                            yaxis ={'title': 'Closing Rate'}
+                        )
+                    })
             ], className ="container"),
         ])
     ])
@@ -136,39 +174,39 @@ app.layout = html.Div([
 
 @app.callback(Output('highlow', 'figure'),
               [Input('my-dropdown', 'value')])
-def update_graph(selected_dropdown):
-    dropdown = {"VNFTF": "Vanguard REIT ETF", "TSLA": "Tesla","ROKU": "Roku"}
-    trace1 = []
-    trace2 = []
-    for stock in selected_dropdown:
-        trace1.append(
-          go.Scatter(x =shorted[shorted["Symbol"] == stock]["Date"],
-                     y =shorted[shorted["Symbol"] == stock][" High"],
-                     mode ='lines', opacity=0.7, 
-                     name =f'High {dropdown[stock]}',textposition='bottom center'))
-        trace2.append(
-          go.Scatter(x =shorted[shorted["Symbol"] == stock]["Date"],
-                     y =shorted[shorted["Symbol"] == stock][" Low"],
-                     mode ='lines', opacity=0.6,
-                     name =f'Low {dropdown[stock]}',textposition='bottom center'))
-    traces = [trace1, trace2]
-    data = [val for sublist in traces for val in sublist]
-    figure = {'data': data,
-              'layout': go.Layout(colorway=["#5E0DAC", '#FF4F00', '#375CB1', 
-                                            '#FF7400', '#FFF400', '#FF0056'],
-            height =600,
-            title =f"High and Low Prices for {', '.join(str(dropdown[i]) for i in selected_dropdown)} Over Time",
-            xaxis ={"title":"Date",
-                   'rangeselector': {'buttons': list([{'count': 1, 'label': '1M', 
-                                                       'step': 'month', 
-                                                       'stepmode': 'backward'},
-                                                      {'count': 6, 'label': '6M', 
-                                                       'step': 'month', 
-                                                       'stepmode': 'backward'},
-                                                      {'step': 'all'}])},
-                   'rangeslider': {'visible': True}, 'type': 'date'},
-             yaxis ={"title":"Price (USD)"})}
-    return figure
+# def update_graph(selected_dropdown):
+#     dropdown = {"VNFTF": "Vanguard REIT ETF", "TSLA": "Tesla","ROKU": "Roku"}
+#     trace1 = []
+#     trace2 = []
+#     for stock in selected_dropdown:
+#         trace1.append(
+#           go.Scatter(x =shorted[shorted["Symbol"] == stock]["Date"],
+#                      y =shorted[shorted["Symbol"] == stock][" High"],
+#                      mode ='lines+markers', opacity=0.7, 
+#                      name =f'High {dropdown[stock]}',textposition='bottom center'))
+#         trace2.append(
+#           go.Scatter(x =shorted[shorted["Symbol"] == stock]["Date"],
+#                      y =shorted[shorted["Symbol"] == stock][" Low"],
+#                      mode ='lines+markers', opacity=0.6,
+#                      name =f'Low {dropdown[stock]}',textposition='bottom center'))
+#     traces = [trace1, trace2]
+#     data = [val for sublist in traces for val in sublist]
+#     figure = {'data': data,
+#               'layout': go.Layout(colorway=["#5E0DAC", '#FF4F00', '#375CB1', 
+#                                             '#FF7400', '#FFF400', '#FF0056'],
+#             height =600,
+#             title =f"High and Low Prices for {', '.join(str(dropdown[i]) for i in selected_dropdown)} Over Time",
+#             xaxis ={"title":"Date",
+#                    'rangeselector': {'buttons': list([{'count': 1, 'label': '1M', 
+#                                                        'step': 'month', 
+#                                                        'stepmode': 'backward'},
+#                                                       {'count': 6, 'label': '6M', 
+#                                                        'step': 'month', 
+#                                                        'stepmode': 'backward'},
+#                                                       {'step': 'all'}])},
+#                    'rangeslider': {'visible': True}, 'type': 'date'},
+#              yaxis ={"title":"Price (USD)"})}
+#     return figure
 @app.callback(Output('volume', 'figure'),
               [Input('my-dropdown2', 'value')])
 
@@ -180,7 +218,7 @@ def update_graph(selected_dropdown_value):
         trace1.append(
           go.Scatter(x =shorted[shorted["Symbol"] == stock]["Date"],
                      y =shorted[shorted["Symbol"] == stock][" Volume"],
-                     mode ='lines', opacity =0.7,
+                     mode ='lines+markers', opacity =0.7,
                      name =f'Volume {dropdown[stock]}', textposition ='bottom center'))
     traces = [trace1]
     data = [val for sublist in traces for val in sublist]
