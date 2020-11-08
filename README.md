@@ -73,6 +73,6 @@ This [NASDAQ](https://www.nasdaq.com/market-activity/stocks/) has been updated b
 ## Technology Used
 
 ![alt text](images/jupyterlogo.png)
-![alt text](images/python.PNG)
-![alt text](images/nasdak.PNG)
+![alt text](images/python.png)
+![alt text](images/nasdak.png)
 
