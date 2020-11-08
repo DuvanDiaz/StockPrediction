@@ -10,7 +10,7 @@
   <a href="#technology-Used">Technology Used</a>
 </p>
 
-In this project we dive into the techincal analysis for a chosen set of stocks, and training of Machine Learning Models to obtain very accurate predictions for price action, and trading volume of the stocks. Using data provided by the NASDAQ website, we were able to do the data engineering needed to train the model and then we were able to display it in the web using the Plotly Dashboard Applications. 
+In this project we dive into the technical analysis for a chosen set of stocks, and training of Machine Learning Models to obtain very accurate predictions for price action, and trading volume of the stocks. Using data provided by the NASDAQ website, we were able to do the data engineering needed to train the model and then we were able to display it in the web using the Plotly Dashboard Applications. 
  
 
 ## Data Source
