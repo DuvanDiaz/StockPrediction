@@ -14,7 +14,9 @@ In this project we dive into the techincal analysis for a chosen set of stocks, 
  
 
 ## Data Source
-![alt text](images/stonks1.png)
+![alt text](images/stonks1.jpg)
+
+
 
 This [NASDAQ](https://www.nasdaq.com/market-activity/stocks/) has been updated by NASDAQ and provided to the public in the form of CSV files. 
 
@@ -70,7 +72,7 @@ This [NASDAQ](https://www.nasdaq.com/market-activity/stocks/) has been updated b
 
 ## Technology Used
 
-![alt text](images/stonks1.jpg)
 ![alt text](images/jupyterlogo.png)
 ![alt text](images/python.PNG)
+![alt text](images/nasdak.PNG)
 
